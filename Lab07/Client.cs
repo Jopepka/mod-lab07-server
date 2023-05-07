@@ -20,9 +20,7 @@ namespace Lab07
         {
             EventHandler<procEventArgs> handler = request;
             if (handler != null)
-            {
                 handler(this, e);
-            }
         }
 
         public void Start(int id)

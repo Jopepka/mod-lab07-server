@@ -11,13 +11,13 @@ namespace Lab07
     {
         private object threadLock = new object();
 
-        public int requestCount { get; private set; } = 0;
-        public int processedCount { get; private set; } = 0;
-        public int rejectedCount { get; private set; } = 0;
+        public int RequestCount { get; private set; } = 0;
+        public int ProcessedCount { get; private set; } = 0;
+        public int RejectedCount { get; private set; } = 0;
 
         PoolRecord[] pool;
-        public int n { get; }
-        public int ExecutionTime { get; } = 100;
+        public int CountPool { get; }
+        public int ExecutuionTime { get; } = 100;
 
         public bool IsNotWork()
         {
@@ -27,11 +27,13 @@ namespace Lab07
             return true;
         }
 
-        public Server(int countServers)
+        public Server(int countPool, double IntensityRequirements_Mu)
         {
-            n = countServers;
+            CountPool = countPool;
 
-            pool = new PoolRecord[n];
+            pool = new PoolRecord[CountPool];
+
+            ExecutuionTime = Convert.ToInt32(1 / IntensityRequirements_Mu * 1000);
         }
         struct PoolRecord
         {
@@ -44,25 +46,25 @@ namespace Lab07
             lock (threadLock)
             {
                 Console.WriteLine("Заявка с номером: {0}", e.ID);
-                requestCount++;
-                for (int i = 0; i < n; i++)
+                RequestCount++;
+                for (int i = 0; i < CountPool; i++)
                 {
                     if (!pool[i].in_use)
                     {
                         pool[i].in_use = true;
                         pool[i].thread = new Thread(new ParameterizedThreadStart(Answer));
-                        pool[i].thread.Start();
-                        processedCount++;
+                        pool[i].thread.Start(i);
+                        ProcessedCount++;
                         return;
                     }
                 }
-                rejectedCount++;
+                RejectedCount++;
             }
         }
 
         public void Answer(object? obj)
         {
-            Thread.Sleep(ExecutionTime);
+            Thread.Sleep(ExecutuionTime);
             pool[Convert.ToInt32(obj)].in_use = false;
         }
     }
