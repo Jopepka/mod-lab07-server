@@ -1,27 +1,37 @@
-﻿namespace Lab07
+﻿using Lab07;
+
+namespace ShanukLab7
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Server server = new Server(10);
+            double Lambda = 5;
+            double Mu = 1;
+            int countPool = 2;
 
-            Client clients = new Client(server);
+            string pathToSave = "AnsStatistic.txt";
 
-            for (int i = 0; i < 1000; i++)
+            Statistic statistic = new Statistic(Lambda, Mu, countPool);
+
+            string ansStatistic = statistic.Start();
+            Console.WriteLine("\n" + ansStatistic);
+
+            FileSave(pathToSave, ansStatistic);
+            Console.WriteLine("\nСтатистика сохранена в файл " + pathToSave);
+        }
+
+        static void FileSave(string path, string text)
+        {
+            if (!File.Exists(path))
             {
-                clients.Start(i);
+                var file = File.Create(path);
+                file.Close();
             }
 
-            while (true)
-            {
-                if (server.IsNotWork())
-                    break;
-                //Thread.Sleep(100);
-            }
-
-            Console.WriteLine(server.processedCount);
-            Console.WriteLine(server.rejectedCount);
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine(text);
+            sw.Close();
         }
     }
 }
