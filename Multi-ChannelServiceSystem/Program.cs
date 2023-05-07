@@ -9,8 +9,7 @@ namespace ShanukLab7
             double Lambda = 5;
             double Mu = 1;
             int countPool = 2;
-
-            string pathToSave = "AnsStatistic.txt";
+            string pathToSave = "../../../../results.txt";
 
             Statistic statistic = new Statistic(Lambda, Mu, countPool);
 
